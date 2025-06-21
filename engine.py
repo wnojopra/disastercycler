@@ -1,4 +1,4 @@
-from models import Character, Location
+from models import Character, Location, RoleType, Incident
 from role_effects import ROLE_EFFECTS
 from state import GameState
 
@@ -64,9 +64,6 @@ def resolve_roles(game_state: GameState):
         if effect_fn:
             effect_fn(char, game_state)
 
-from models import RoleType
-from state import GameState
-
 def check_loss_conditions(game_state: GameState) -> bool:
     """
     Checks if any immediate loss condition is met. Returns True if Protagonists lose.
@@ -78,3 +75,6 @@ def check_loss_conditions(game_state: GameState) -> bool:
 
     # TODO: Add other loss conditions like Butterfly Effect, cult victory, etc.
     return False
+
+def resolve_incident(game_state: GameState, incident: Incident):
+    pass

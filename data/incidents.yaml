@@ -1,0 +1,8 @@
+incidents:
+  - name: "Murder"
+    culprit: "Office Worker"
+    day: 2
+
+  - name: "Suicide"
+    culprit: "Girl Student"
+    day: 3
