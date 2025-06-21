@@ -1,0 +1,10 @@
+actions:
+  - character: Girl Student
+    type: move
+    direction: VERTICAL
+
+  - character: Office Worker
+    type: add_paranoia
+
+  - character: Doctor
+    type: add_paranoia

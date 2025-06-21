@@ -1,0 +1,36 @@
+characters:
+  - name: Boy Student
+    location: SCHOOL
+    starting_location: SCHOOL
+    disallowed_locations: []
+    role: PERSON
+  
+  - name: Girl Student
+    location: SCHOOL
+    starting_location: SCHOOL
+    disallowed_locations: []
+    role: KEY_PERSON
+
+  - name: Doctor
+    location: HOSPITAL
+    starting_location: HOSPITAL
+    disallowed_locations: []
+    role: BRAIN
+
+  - name: Office Worker
+    location: CITY
+    starting_location: CITY
+    disallowed_locations: [SCHOOL]
+    role: KILLER
+  
+  - name: Police Officer
+    location: CITY
+    starting_location: CITY
+    disallowed_locations: []
+    role: CONSPIRACY_THEORIST
+
+  - name: Shrine Maiden
+    location: SHRINE
+    starting_location: SHRINE
+    disallowed_locations: [CITY]
+    role: SERIAL_KILLER
