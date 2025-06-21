@@ -1,11 +1,12 @@
 from state import GameState
 from victory_checker import check_victory
-from yaml_loader import load_characters_from_yaml, load_actions_from_yaml
-from engine import check_loss_conditions, resolve_actions, resolve_roles
+from yaml_loader import load_characters_from_yaml, load_actions_from_yaml, load_incidents_from_yaml
+from engine import check_loss_conditions, resolve_actions, resolve_roles, resolve_incident
 from models import Location
 
 def simulate_day_1():
     characters = load_characters_from_yaml("data/characters.yaml")
+    incidents = load_incidents_from_yaml("data/incidents.yaml")
     
     game_state = GameState(
         day=1,
@@ -19,6 +20,9 @@ def simulate_day_1():
 
     resolve_actions(game_state, actions)
     resolve_roles(game_state)
+    day1_incident = next((i for i in incidents if i.day == 1), None)
+    if day1_incident:
+        resolve_incident(game_state, day1_incident)
 
     print("--- Day 1 State ---")
     game_state.print_characters()

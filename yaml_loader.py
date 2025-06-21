@@ -1,6 +1,6 @@
 import yaml
 from typing import Dict, List, Union
-from models import Character, Location, RoleType
+from models import Character, Location, RoleType, Incident
 
 def load_characters_from_yaml(path: str) -> List[Character]:
     with open(path, "r") as f:
@@ -34,3 +34,18 @@ def load_actions_from_yaml(path: str) -> Dict[str, Dict[str, Union[str, Location
         actions[char_name] = action
 
     return actions
+
+def load_incidents_from_yaml(path: str) -> List[Incident]:
+    with open(path, "r") as f:
+        raw = yaml.safe_load(f)
+   
+    incidents = []
+    for entry in raw["incidents"]:
+        incident = Incident(
+            name = entry["name"],
+            day = entry["day"],
+            culprit = entry["culprit"]
+        )
+        incidents.append(incident)
+
+    return incidents
