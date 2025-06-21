@@ -21,7 +21,8 @@ def simulate_day_1():
     resolve_actions(game_state, actions)
     resolve_roles(game_state)
     day1_incident = next((i for i in incidents if i.day == 1), None)
-    resolve_incident(game_state, day1_incident)
+    if day1_incident:
+        resolve_incident(game_state, day1_incident)
 
     print("--- Day 1 State ---")
     game_state.print_characters()
