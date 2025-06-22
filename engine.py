@@ -1,3 +1,4 @@
+from typing import List, Optional
 from models import Character, Location, RoleType, Incident
 from role_effects import ROLE_EFFECTS
 from state import GameState
@@ -64,17 +65,11 @@ def resolve_roles(game_state: GameState):
         if effect_fn:
             effect_fn(char, game_state)
 
-def check_loss_conditions(game_state: GameState) -> bool:
-    """
-    Checks if any immediate loss condition is met. Returns True if Protagonists lose.
-    """
-    for char in game_state.characters:
-        if char.role == RoleType.KEY_PERSON and not char.alive:
-            print(f"❌ {char.name} (Key Person) died — Protagonists lose immediately!")
-            return True
-
-    # TODO: Add other loss conditions like Butterfly Effect, cult victory, etc.
-    return False
-
-def resolve_incident(game_state: GameState, incident: Incident):
-    pass
+def resolve_incident(game_state: GameState):
+    incident = next((i for i in game_state.incidents if i.day == game_state.day), None)
+    if incident is None:
+        print(f"🟢 No incident on day {game_state.day}")
+    else:
+        culprit = next(c for c in game_state.characters if c.name == incident.culprit)
+        if culprit.paranoia >= culprit.paranoia_limit:
+            print(f"🔴 The {incident.name} incident happens on day {game_state.day}")

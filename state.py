@@ -16,4 +16,7 @@ class GameState:
 
     def print_characters(self):
         for char in self.characters:
-         print(f"{char.name} is at {char.location}, paranoia={char.paranoia}, goodwill={char.goodwill}")
+            message = f"{char.name} is at {char.location}, paranoia={char.paranoia}, goodwill={char.goodwill}"
+            if not char.alive:
+                message += ", status=DEAD"
+            print(message)

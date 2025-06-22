@@ -30,6 +30,7 @@ class Character:
     starting_location: Location
     disallowed_locations: List[Location]
     paranoia: int = 0
+    paranoia_limit: int = 0
     goodwill: int = 0
     intrigue: int = 0
     role: RoleType = RoleType.PERSON
