@@ -1,5 +1,4 @@
-from typing import List, Optional
-from models import Character, Location, RoleType, Incident
+from models import Character, Location
 from role_effects import ROLE_EFFECTS
 from state import GameState
 

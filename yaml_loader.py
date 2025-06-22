@@ -1,8 +1,8 @@
 import yaml
 from typing import Dict, List, Union
-from models import Character, Location, RoleType, Incident
+from models import Character, Location, RoleType, Incident, Script
 
-def load_characters_from_yaml(path: str) -> List[Character]:
+def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:
         data = yaml.safe_load(f)
 
@@ -10,7 +10,7 @@ def load_characters_from_yaml(path: str) -> List[Character]:
     for entry in data["characters"]:
         character = Character(
             name=entry["name"],
-            location=Location[entry["location"]],
+            location=Location[entry["starting_location"]],
             starting_location=Location[entry["starting_location"]],
             disallowed_locations=[Location[loc] for loc in entry["disallowed_locations"]],
             paranoia_limit=entry["paranoia_limit"],
@@ -18,8 +18,22 @@ def load_characters_from_yaml(path: str) -> List[Character]:
         )
         characters.append(character)
 
-    return characters
+    incidents = []
+    for entry in data["incidents"]:
+        incident = Incident(
+            name = entry["name"],
+            day = entry["day"],
+            culprit = entry["culprit"]
+        )
+        incidents.append(incident)
 
+    return Script(
+        name=data["name"],
+        days_per_loop=data["days_per_loop"],
+        max_loops=data["max_loops"],
+        characters=characters,
+        incidents=incidents
+    )
 
 def load_actions_from_yaml(path: str) -> Dict[str, Dict[str, Union[str, Location]]]:
     with open(path, "r") as f:
@@ -35,18 +49,3 @@ def load_actions_from_yaml(path: str) -> Dict[str, Dict[str, Union[str, Location
         actions[char_name] = action
 
     return actions
-
-def load_incidents_from_yaml(path: str) -> List[Incident]:
-    with open(path, "r") as f:
-        raw = yaml.safe_load(f)
-   
-    incidents = []
-    for entry in raw["incidents"]:
-        incident = Incident(
-            name = entry["name"],
-            day = entry["day"],
-            culprit = entry["culprit"]
-        )
-        incidents.append(incident)
-
-    return incidents

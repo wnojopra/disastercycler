@@ -41,3 +41,12 @@ class Incident:
     name: str
     day: int
     culprit: Character
+
+@dataclass
+class Script:
+    name: str
+    days_per_loop: int
+    max_loops: int
+
+    characters: List[Character]
+    incidents: List[Incident]

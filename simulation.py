@@ -1,12 +1,13 @@
 from state import GameState
 from victory_checker import check_victory
-from yaml_loader import load_characters_from_yaml, load_actions_from_yaml, load_incidents_from_yaml
+from yaml_loader import load_actions_from_yaml, load_script_from_yaml
 from engine import resolve_actions, resolve_roles, resolve_incident
 from models import Location
 
 def simulate_day_1() -> GameState:
-    characters = load_characters_from_yaml("data/characters.yaml")
-    incidents = load_incidents_from_yaml("data/incidents.yaml")
+    script = load_script_from_yaml("scripts/the_first_script.yaml")
+    characters = script.characters
+    incidents = script.incidents
     actions = load_actions_from_yaml("data/actions_day1.yaml")
     
     game_state = GameState(
