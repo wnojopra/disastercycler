@@ -1,6 +1,6 @@
 import yaml
-from typing import Dict, List, Union
-from models import Character, Location, RoleType, Incident, Script
+from typing import Any, Dict, List, Union
+from models import Action, ActionType, Character, Location, RoleType, Incident, Script
 
 def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:
@@ -35,17 +35,35 @@ def load_script_from_yaml(path: str) -> Script:
         incidents=incidents
     )
 
-def load_actions_from_yaml(path: str) -> Dict[str, Dict[str, Union[str, Location]]]:
-    with open(path, "r") as f:
-        raw = yaml.safe_load(f)
+def load_actions_from_yaml(file_path: str) -> Dict[int, Dict[str, List[Action]]]:
+    """
+    Load and validate a sequence of actions for each day from a YAML file.
+    
+    Returns:
+        A dict with day as the key and value as another dict with keys 'mastermind' and 'protagonist',
+        each mapping to a list of actions.
+    """
+    with open(file_path, 'r') as f:
+        data = yaml.safe_load(f)
 
-    actions = {}
-    for entry in raw["actions"]:
-        char_name = entry["character"]
-        action_type = entry["type"]
-        action = {"type": action_type}
-        if action_type == "move":
-            action["direction"] = entry["direction"]
-        actions[char_name] = action
+    actions_by_day: Dict[int, Dict[str, List[Action]]] = {}
 
-    return actions
+    for entry in data:
+        day = entry.get("day")
+        if day is None:
+            raise ValueError("Each entry must include a 'day' field.")
+
+        if "mastermind" not in entry or "protagonist" not in entry:
+            raise ValueError(f"Day {day} must include both 'mastermind' and 'protagonist' actions.")
+        
+        actions_by_day[day] = {}
+
+        actions: List[Action] = []
+        for a in entry["mastermind"]:
+            actions.append(Action(type=ActionType[a["type"]], target=a["target"]))
+            actions_by_day[day]["mastermind"] = actions
+        actions = []
+        for a in entry["protagonist"]:
+            actions.append(Action(type=ActionType[a["type"]], target=a["target"]))
+            actions_by_day[day]["protagonist"] = actions
+    return actions_by_day

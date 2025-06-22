@@ -23,6 +23,15 @@ class Location(Enum):
     SCHOOL = "school"
     SHRINE = "shrine"
 
+ALL_LOCATIONS = list(Location)
+
+class ActionType(Enum):
+    MOVE_VERTICAL = "move_vertical"
+    MOVE_HORIZONTAL = "move_horizontal"
+    MOVE_DIAGONAL = "move_diagonal"
+    ADD_GOODWILL = "add_goodwill"
+    ADD_PARANOIA = "add_paranoia"
+
 @dataclass
 class Character:
     name: str
@@ -35,6 +44,14 @@ class Character:
     intrigue: int = 0
     role: RoleType = RoleType.PERSON
     alive: bool = True
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        if not isinstance(other, Character):
+            return NotImplemented
+        return self.name == other.name
 
 @dataclass
 class Incident:
@@ -50,3 +67,8 @@ class Script:
 
     characters: List[Character]
     incidents: List[Incident]
+
+@dataclass
+class Action:
+    type: ActionType
+    target: str

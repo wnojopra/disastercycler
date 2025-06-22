@@ -1,4 +1,5 @@
-from models import Character, Location
+from typing import Dict, List
+from models import Action, Character, Location, ActionType, ALL_LOCATIONS
 from role_effects import ROLE_EFFECTS
 from state import GameState
 
@@ -44,17 +45,38 @@ def resolve_move(char: Character, direction: str):
     # If no valid move
     print(f"{char.name} could not move due to disallowed location restriction.")
 
-def resolve_actions(game_state: GameState, actions: dict[str, dict]):
-    for char in game_state.characters:
-        if char.name in actions:
-            action = actions[char.name]
-            if action["type"] == "move":
-                resolve_move(char, action["direction"])
-            elif action["type"] == "add_paranoia":
-                char.paranoia += 1
-            elif action["type"] == "add_goodwill":
-                char.goodwill += 1
+def resolve_action(char: Character, action_type: ActionType):
+    if action_type == ActionType.MOVE_VERTICAL:
+        print(f"here,{action_type}")
+        resolve_move(char, "VERTICAL")
+    elif action_type == ActionType.ADD_PARANOIA:
+        char.paranoia += 1
+    elif action_type == ActionType.ADD_GOODWILL:
+        char.goodwill += 1
+    else:
+        raise ValueError(f"Invalid action type {action_type}")
 
+def resolve_actions(game_state: GameState, actions: Dict[str, List[Action]]):
+    # First, create a dict keyed by each target with an action, value is a list of its actions
+    char_to_actions: Dict[Character, List[Action]] = {}
+    loc_to_actions = {}
+    for action in actions["mastermind"] + actions["protagonist"]:
+        if action.target in ALL_LOCATIONS:
+            if action.target not in loc_to_actions:
+                loc_to_actions[action.target] = [action]
+            else:
+                loc_to_actions[action.target].append(action)
+        else:
+            char = next(c for c in game_state.characters if c.name == action.target)
+            if char not in char_to_actions:
+                char_to_actions[char] = [action]
+            else:
+                char_to_actions[char].append(action)
+    # Now for each character, resolve each action
+    # Later on we need to handle resolving pairs of actions
+    for char in char_to_actions:
+        for action in char_to_actions[char]:
+            resolve_action(char, action.type)
 
 def resolve_roles(game_state: GameState):
     for char in game_state.characters:
