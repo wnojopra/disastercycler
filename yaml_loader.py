@@ -31,6 +31,8 @@ def load_script_from_yaml(path: str) -> Script:
         name=data["name"],
         days_per_loop=data["days_per_loop"],
         max_loops=data["max_loops"],
+        plot=data["plot"],
+        subplots=data["subplots"],
         characters=characters,
         incidents=incidents
     )

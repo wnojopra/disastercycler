@@ -64,6 +64,8 @@ class Script:
     name: str
     days_per_loop: int
     max_loops: int
+    plot: str
+    subplots: List[str]
 
     characters: List[Character]
     incidents: List[Incident]

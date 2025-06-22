@@ -1,6 +1,8 @@
 name: "The First Script"
 days_per_loop: 4
 max_loops: 3
+plot: "Muder Plan"
+subplots: ["Shadow of the Ripper"]
 
 characters:
   - name: Boy Student
