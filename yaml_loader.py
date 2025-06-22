@@ -13,6 +13,7 @@ def load_characters_from_yaml(path: str) -> List[Character]:
             location=Location[entry["location"]],
             starting_location=Location[entry["starting_location"]],
             disallowed_locations=[Location[loc] for loc in entry["disallowed_locations"]],
+            paranoia_limit=entry["paranoia_limit"],
             role=RoleType[entry["role"]]
         )
         characters.append(character)

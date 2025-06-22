@@ -1,0 +1,10 @@
+actions:
+  - character: Police Officer
+    type: move
+    direction: HORIZONTAL
+
+  - character: Office Worker
+    type: add_paranoia
+
+  - character: Doctor
+    type: add_paranoia
