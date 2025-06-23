@@ -4,6 +4,7 @@ from state import GameState
 
 def resolve_murder(culprit: Character, incident: Incident, game_state: GameState):
     if not culprit.alive:
+        print(f"🟢 The murder incident does not happen on day {game_state.day}")
         return
 
     others = [
@@ -20,13 +21,17 @@ def resolve_murder(culprit: Character, incident: Incident, game_state: GameState
         victim = others[0]
         victim.alive = False
         print(f"💀 {culprit.name} (Murder Culprit) murdered {target_character.name} at {culprit.location.name}")
+    else:
+        print(f"🟢 The murder incident does not happen on day {game_state.day}")
 
 # Placeholder for other incidents
 def resolve_suicide(culprit: Character, incident: Incident, game_state: GameState):
     if not culprit.alive:
+        print(f"🟢 The suicide incident does not happen on day {game_state.day}")
         return
-    culprit.alive = False
-    print(f"💀 {culprit.name} comitted suicide")
+    else:
+        culprit.alive = False
+        print(f"💀 {culprit.name} comitted suicide")
 
 INCIDENT_EFFECTS = {
     IncidentType.MURDER: resolve_murder,

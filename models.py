@@ -61,7 +61,7 @@ class IncidentType(Enum):
 class Incident:
     type: IncidentType
     day: int
-    culprit: Character
+    culprit: str
 
 @dataclass
 class Script:
