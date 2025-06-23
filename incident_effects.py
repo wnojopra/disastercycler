@@ -22,8 +22,11 @@ def resolve_murder(culprit: Character, incident: Incident, game_state: GameState
         print(f"💀 {culprit.name} (Murder Culprit) murdered {target_character.name} at {culprit.location.name}")
 
 # Placeholder for other incidents
-def resolve_suicide(char: Character, incident: Incident, game_state: GameState):
-    pass
+def resolve_suicide(culprit: Character, incident: Incident, game_state: GameState):
+    if not culprit.alive:
+        return
+    culprit.alive = False
+    print(f"💀 {culprit.name} comitted suicide")
 
 INCIDENT_EFFECTS = {
     IncidentType.MURDER: resolve_murder,
