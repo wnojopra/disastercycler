@@ -1,7 +1,9 @@
-from typing import List, Optional
-from models import Character, Location, RoleType, Incident
+from typing import Dict, List
+from incident_effects import INCIDENT_EFFECTS
+from models import Action, Character, Location, ActionType, ALL_LOCATIONS
 from role_effects import ROLE_EFFECTS
 from state import GameState
+from collections import defaultdict
 
 # Define the layout as a 2x2 grid
 LOCATION_GRID = [
@@ -45,16 +47,41 @@ def resolve_move(char: Character, direction: str):
     # If no valid move
     print(f"{char.name} could not move due to disallowed location restriction.")
 
-def resolve_actions(game_state: GameState, actions: dict[str, dict]):
-    for char in game_state.characters:
-        if char.name in actions:
-            action = actions[char.name]
-            if action["type"] == "move":
-                resolve_move(char, action["direction"])
-            elif action["type"] == "add_paranoia":
-                char.paranoia += 1
-            elif action["type"] == "add_goodwill":
-                char.goodwill += 1
+def resolve_action(char: Character, action_type: ActionType):
+    if action_type == ActionType.MOVE_VERTICAL:
+        resolve_move(char, "VERTICAL")
+    elif action_type == ActionType.MOVE_HORIZONTAL:
+        resolve_move(char, "HORIZONTAL")
+    elif action_type == ActionType.ADD_PARANOIA:
+        char.paranoia += 1
+    elif action_type == ActionType.ADD_GOODWILL:
+        char.goodwill += 1
+    else:
+        raise ValueError(f"Invalid action type {action_type}")
+
+def resolve_actions(game_state: GameState, actions: Dict[str, List[Action]]):
+    # Group actions by target
+    char_to_actions: Dict[Character, List[Action]] = defaultdict(list)
+    loc_to_actions: Dict[str, List[Action]] = defaultdict(list)
+
+    for action in actions["mastermind"] + actions["protagonist"]:
+        if action.target in ALL_LOCATIONS:
+            loc_to_actions[action.target].append(action)
+        else:
+            char = next((c for c in game_state.characters if c.name == action.target), None)
+            if not char:
+                raise ValueError(f"Unknown character target: {action.target}")
+            char_to_actions[char].append(action)
+
+    # Resolve actions targeting characters
+    for char, action_list in char_to_actions.items():
+        for action in action_list:
+            resolve_action(char, action.type) # type: ignore
+
+    # TODO: Resolve location-based actions (not yet implemented)
+    # for loc, action_list in loc_to_actions.items():
+    #     ...
+
 
 
 def resolve_roles(game_state: GameState):
@@ -72,4 +99,7 @@ def resolve_incident(game_state: GameState):
     else:
         culprit = next(c for c in game_state.characters if c.name == incident.culprit)
         if culprit.paranoia >= culprit.paranoia_limit:
-            print(f"🔴 The {incident.name} incident happens on day {game_state.day}")
+            print(f"🔴 The {incident.type} incident happens on day {game_state.day}")
+            effect_fn = INCIDENT_EFFECTS.get(incident.type)
+            if effect_fn:
+                effect_fn(culprit, incident, game_state)

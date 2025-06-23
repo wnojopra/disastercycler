@@ -1,0 +1,47 @@
+# One top-level list for each day
+# The expected outcome here is the murder incident triggers on day 2
+- day: 1
+  mastermind:
+    - target: Girl Student
+      type: ADD_PARANOIA
+
+    - target: Office Worker
+      type: ADD_PARANOIA
+
+    - target: Doctor
+      type: MOVE_VERTICAL
+
+  protagonist:
+    - target: Shrine Maiden
+      type: MOVE_HORIZONTAL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL
+
+- day: 2
+  mastermind:
+    - target: Girl Student
+      type: MOVE_HORIZONTAL
+
+    - target: Office Worker
+      type: ADD_PARANOIA
+
+    - target: Doctor
+      type: ADD_PARANOIA
+
+  protagonist:
+    - target: Boy Student
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL
+
+  incident_choices:
+    - incident_type: MURDER
+      target: Girl Student

@@ -1,42 +1,51 @@
+name: "The First Script"
+days_per_loop: 4
+max_loops: 3
+plot: "Muder Plan"
+subplots: ["Shadow of the Ripper"]
+
 characters:
   - name: Boy Student
-    location: SCHOOL
     starting_location: SCHOOL
     disallowed_locations: []
     paranoia_limit: 2
     role: PERSON
   
   - name: Girl Student
-    location: SCHOOL
     starting_location: SCHOOL
     disallowed_locations: []
     paranoia_limit: 3
     role: KEY_PERSON
 
   - name: Doctor
-    location: HOSPITAL
     starting_location: HOSPITAL
     disallowed_locations: []
     paranoia_limit: 2
     role: BRAIN
 
   - name: Office Worker
-    location: CITY
     starting_location: CITY
     disallowed_locations: [SCHOOL]
     paranoia_limit: 2
     role: KILLER
   
   - name: Police Officer
-    location: CITY
     starting_location: CITY
     disallowed_locations: []
     paranoia_limit: 3
     role: CONSPIRACY_THEORIST
 
   - name: Shrine Maiden
-    location: SHRINE
     starting_location: SHRINE
     disallowed_locations: [CITY]
     paranoia_limit: 2
     role: SERIAL_KILLER
+
+incidents:
+  - type: MURDER
+    culprit: "Office Worker"
+    day: 2
+
+  - type: SUICIDE
+    culprit: "Girl Student"
+    day: 3

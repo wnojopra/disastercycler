@@ -1,51 +1,53 @@
+import argparse
 from state import GameState
 from victory_checker import check_victory
-from yaml_loader import load_characters_from_yaml, load_actions_from_yaml, load_incidents_from_yaml
+from yaml_loader import load_actions_from_yaml, load_script_from_yaml
 from engine import resolve_actions, resolve_roles, resolve_incident
-from models import Location
 
-def simulate_day_1() -> GameState:
-    characters = load_characters_from_yaml("data/characters.yaml")
-    incidents = load_incidents_from_yaml("data/incidents.yaml")
-    actions = load_actions_from_yaml("data/actions_day1.yaml")
+def create_starting_game_state(script_path: str, actions_path: str) -> GameState:
+    day = 1
+    script = load_script_from_yaml(script_path)
+    actions = load_actions_from_yaml(actions_path)
     
-    game_state = GameState(
-        day=1,
+    return GameState(
+        day=day,
         loop_count=1,
-        max_loops=3,
-        characters=characters,
-        incidents=incidents
+        max_loops=script.max_loops,
+        characters=script.characters,
+        incidents=script.incidents,
+        actions=actions
     )
 
-    resolve_actions(game_state, actions)
+def simulate_day(game_state: GameState):
+    todays_actions = game_state.actions[game_state.day]
+    resolve_actions(game_state, todays_actions)
     resolve_roles(game_state)
     resolve_incident(game_state)
 
-    print("--- Day 1 State ---")
+    print(f"--- Day {game_state.day} State ---")
     game_state.print_characters()
 
-    result = check_victory(game_state)
-    if result:
-        game_state.game_result = result
-        print(f"🏁 Game Over — {result.replace('_', ' ').title()}")
-    return game_state
-    
-def simulate_day_2(game_state: GameState) -> GameState:
-    game_state.day = 2
-    actions = load_actions_from_yaml("data/actions_day2.yaml")
-    resolve_actions(game_state, actions)
-    resolve_roles(game_state)
-    resolve_incident(game_state)
+    check_victory(game_state)
+    if game_state.game_result:
+        print(f"🏁 Game Over — {game_state.game_result.replace('_', ' ').title()}")
+    game_state.day += 1
 
-    print("--- Day 2 State ---")
-    game_state.print_characters()
+def main():
+    parser = argparse.ArgumentParser(description="Run Tragedy Looper simulation.")
+    parser.add_argument("script_name", help="Name of the script YAML file (without extension)")
+    parser.add_argument("actions_file", help="Name of the actions YAML file (without extension)")
 
-    result = check_victory(game_state)
-    if result:
-        game_state.game_result = result
-        print(f"🏁 Game Over — {result.replace('_', ' ').title()}")
-    return game_state
+    args = parser.parse_args()
+
+    # Assuming your YAML files live in a folder like 'scripts/' and have a '.yaml' extension
+    script_path = f"scripts/{args.script_name}/script.yaml"
+    actions_path = f"scripts/{args.script_name}/{args.actions_file}.yaml"
+
+    game_state = create_starting_game_state(script_path, actions_path)
+    while game_state.game_result is None:
+        simulate_day(game_state)
+
 
 if __name__ == "__main__":
-    game_state = simulate_day_1()
-    simulate_day_2(game_state)
+    main()
+

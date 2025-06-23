@@ -1,0 +1,22 @@
+# One top-level list for each day
+# The expected outcome here is the serial killer kills the key person on night 1
+- day: 1
+  mastermind:
+    - target: Girl Student
+      type: MOVE_VERTICAL
+
+    - target: Office Worker
+      type: ADD_PARANOIA
+
+    - target: Doctor
+      type: ADD_PARANOIA
+
+  protagonist:
+    - target: Girl Student
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL

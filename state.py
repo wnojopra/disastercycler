@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from models import Character, Incident
+from models import Character, Incident, AllActionsByDay
 
 
 @dataclass
@@ -11,6 +11,7 @@ class GameState:
     max_loops: int
     characters: List[Character]
     incidents: List[Incident]
+    actions: AllActionsByDay
     game_result: Optional[str] = None  # "protagonists_win", "mastermind_win", or None
 
 

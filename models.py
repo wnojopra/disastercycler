@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import Dict, List, TypeAlias
 
 
 class RoleType(Enum):
@@ -23,6 +23,15 @@ class Location(Enum):
     SCHOOL = "school"
     SHRINE = "shrine"
 
+ALL_LOCATIONS = list(Location)
+
+class ActionType(Enum):
+    MOVE_VERTICAL = "move_vertical"
+    MOVE_HORIZONTAL = "move_horizontal"
+    MOVE_DIAGONAL = "move_diagonal"
+    ADD_GOODWILL = "add_goodwill"
+    ADD_PARANOIA = "add_paranoia"
+
 @dataclass
 class Character:
     name: str
@@ -36,8 +45,38 @@ class Character:
     role: RoleType = RoleType.PERSON
     alive: bool = True
 
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        if not isinstance(other, Character):
+            return NotImplemented
+        return self.name == other.name
+
+class IncidentType(Enum):
+    MURDER = "murder"
+    SUICIDE = "suicide"
+
 @dataclass
 class Incident:
-    name: str
+    type: IncidentType
     day: int
     culprit: Character
+
+@dataclass
+class Script:
+    name: str
+    days_per_loop: int
+    max_loops: int
+    plot: str
+    subplots: List[str]
+
+    characters: List[Character]
+    incidents: List[Incident]
+
+@dataclass
+class Action:
+    type: ActionType | IncidentType
+    target: str
+
+AllActionsByDay: TypeAlias = Dict[int, Dict[str, List[Action]]]
