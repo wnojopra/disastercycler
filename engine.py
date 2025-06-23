@@ -1,4 +1,5 @@
 from typing import Dict, List
+from incident_effects import INCIDENT_EFFECTS
 from models import Action, Character, Location, ActionType, ALL_LOCATIONS
 from role_effects import ROLE_EFFECTS
 from state import GameState
@@ -49,6 +50,8 @@ def resolve_move(char: Character, direction: str):
 def resolve_action(char: Character, action_type: ActionType):
     if action_type == ActionType.MOVE_VERTICAL:
         resolve_move(char, "VERTICAL")
+    elif action_type == ActionType.MOVE_HORIZONTAL:
+        resolve_move(char, "HORIZONTAL")
     elif action_type == ActionType.ADD_PARANOIA:
         char.paranoia += 1
     elif action_type == ActionType.ADD_GOODWILL:
@@ -73,7 +76,7 @@ def resolve_actions(game_state: GameState, actions: Dict[str, List[Action]]):
     # Resolve actions targeting characters
     for char, action_list in char_to_actions.items():
         for action in action_list:
-            resolve_action(char, action.type)
+            resolve_action(char, action.type) # type: ignore
 
     # TODO: Resolve location-based actions (not yet implemented)
     # for loc, action_list in loc_to_actions.items():
@@ -96,4 +99,7 @@ def resolve_incident(game_state: GameState):
     else:
         culprit = next(c for c in game_state.characters if c.name == incident.culprit)
         if culprit.paranoia >= culprit.paranoia_limit:
-            print(f"🔴 The {incident.name} incident happens on day {game_state.day}")
+            print(f"🔴 The {incident.type} incident happens on day {game_state.day}")
+            effect_fn = INCIDENT_EFFECTS.get(incident.type)
+            if effect_fn:
+                effect_fn(culprit, incident, game_state)

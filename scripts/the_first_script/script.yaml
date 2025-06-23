@@ -42,10 +42,10 @@ characters:
     role: SERIAL_KILLER
 
 incidents:
-  - name: "Murder"
+  - type: MURDER
     culprit: "Office Worker"
     day: 2
 
-  - name: "Suicide"
+  - type: SUICIDE
     culprit: "Girl Student"
     day: 3

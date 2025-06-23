@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import Dict, List, TypeAlias
 
 
 class RoleType(Enum):
@@ -53,9 +53,13 @@ class Character:
             return NotImplemented
         return self.name == other.name
 
+class IncidentType(Enum):
+    MURDER = "murder"
+    SUICIDE = "suicide"
+
 @dataclass
 class Incident:
-    name: str
+    type: IncidentType
     day: int
     culprit: Character
 
@@ -72,5 +76,7 @@ class Script:
 
 @dataclass
 class Action:
-    type: ActionType
+    type: ActionType | IncidentType
     target: str
+
+AllActionsByDay: TypeAlias = Dict[int, Dict[str, List[Action]]]
