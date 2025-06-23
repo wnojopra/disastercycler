@@ -1,0 +1,64 @@
+# One top-level list for each day
+# The expected outcome here is the protagonists win by avoiding all tragedies through day 4 
+- day: 1
+  mastermind:
+    - target: Girl Student
+      type: ADD_INTRIGUE
+
+    - target: Office Worker
+      type: ADD_INTRIGUE
+
+    - target: Doctor
+      type: ADD_INTRIGUE
+
+  protagonist:
+    - target: Shrine Maiden
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL
+
+- day: 2
+  mastermind:
+    - target: Girl Student
+      type: ADD_INTRIGUE
+
+    - target: Office Worker
+      type: ADD_INTRIGUE
+
+    - target: Doctor
+      type: ADD_INTRIGUE
+
+  protagonist:
+    - target: Boy Student
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL
+
+- day: 3
+  mastermind:
+    - target: Girl Student
+      type: ADD_INTRIGUE
+
+    - target: Office Worker
+      type: ADD_INTRIGUE
+
+    - target: Doctor
+      type: ADD_INTRIGUE
+
+  protagonist:
+    - target: Boy Student
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL

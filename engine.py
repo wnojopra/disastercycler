@@ -56,6 +56,8 @@ def resolve_action(char: Character, action_type: ActionType):
         char.paranoia += 1
     elif action_type == ActionType.ADD_GOODWILL:
         char.goodwill += 1
+    elif action_type == ActionType.ADD_INTRIGUE:
+        char.intrigue += 1
     else:
         raise ValueError(f"Invalid action type {action_type}")
 

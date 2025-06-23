@@ -31,6 +31,7 @@ class ActionType(Enum):
     MOVE_DIAGONAL = "move_diagonal"
     ADD_GOODWILL = "add_goodwill"
     ADD_PARANOIA = "add_paranoia"
+    ADD_INTRIGUE = "add_intrigue"
 
 @dataclass
 class Character:

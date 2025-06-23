@@ -18,3 +18,7 @@ def check_victory(game_state: GameState):
 
     # Future: all loops used & tragedy prevented
     #
+    if game_state.game_result is None and (game_state.day == game_state.days_per_loop-1):
+        print(f"🏆 The end of the last day has ended with no tragedies. Protagonists win!")
+        game_state.game_result = "protagonist_win"
+        return
