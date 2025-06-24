@@ -31,6 +31,7 @@ class ActionType(Enum):
     MOVE_DIAGONAL = "move_diagonal"
     ADD_GOODWILL = "add_goodwill"
     ADD_PARANOIA = "add_paranoia"
+    ADD_INTRIGUE = "add_intrigue"
 
 @dataclass
 class Character:
@@ -61,7 +62,7 @@ class IncidentType(Enum):
 class Incident:
     type: IncidentType
     day: int
-    culprit: Character
+    culprit: str
 
 @dataclass
 class Script:

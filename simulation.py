@@ -12,6 +12,7 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
     return GameState(
         day=day,
         loop_count=1,
+        days_per_loop=script.days_per_loop,
         max_loops=script.max_loops,
         characters=script.characters,
         incidents=script.incidents,

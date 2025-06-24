@@ -8,6 +8,7 @@ from models import Character, Incident, AllActionsByDay
 class GameState:
     day: int
     loop_count: int
+    days_per_loop: int
     max_loops: int
     characters: List[Character]
     incidents: List[Incident]
@@ -17,7 +18,7 @@ class GameState:
 
     def print_characters(self):
         for char in self.characters:
-            message = f"{char.name} is at {char.location}, paranoia={char.paranoia}, goodwill={char.goodwill}"
+            message = f"{char.name} is at {char.location}, paranoia={char.paranoia}, goodwill={char.goodwill}, intrigue={char.intrigue}"
             if not char.alive:
                 message += ", status=DEAD"
             print(message)
