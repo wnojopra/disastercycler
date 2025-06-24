@@ -7,4 +7,4 @@ fi
 
 DAY_NUM="$1"
 
-python simulation.py the_first_script "actions_${DAY_NUM}"
+python engine/simulation.py the_first_script "actions_${DAY_NUM}"
