@@ -1,5 +1,5 @@
-from models import Character, Incident, IncidentType
-from state import GameState
+from .models import Character, Incident, IncidentType
+from .state import GameState
 
 
 def resolve_murder(culprit: Character, incident: Incident, game_state: GameState):

@@ -1,5 +1,5 @@
-from state import GameState
-from models import RoleType
+from .state import GameState
+from .models import RoleType
 
 def check_victory(game_state: GameState):
     """

@@ -1,5 +1,5 @@
-from models import Character, RoleType
-from state import GameState
+from .models import Character, RoleType
+from .state import GameState
 
 def resolve_serial_killer(char: Character, game_state: GameState):
     if not char.alive:

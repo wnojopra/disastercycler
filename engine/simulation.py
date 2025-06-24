@@ -1,8 +1,8 @@
 import argparse
-from state import GameState
-from victory_checker import check_victory
-from yaml_loader import load_actions_from_yaml, load_script_from_yaml
-from engine import resolve_actions, resolve_roles, resolve_incident
+from .state import GameState
+from .victory_checker import check_victory
+from .yaml_loader import load_actions_from_yaml, load_script_from_yaml
+from .engine import resolve_actions, resolve_roles, resolve_incident
 
 def create_starting_game_state(script_path: str, actions_path: str) -> GameState:
     day = 1
