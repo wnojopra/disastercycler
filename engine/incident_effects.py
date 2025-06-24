@@ -13,7 +13,9 @@ def resolve_murder(culprit: Character, incident: Incident, game_state: GameState
     ]
     if len(others) >= 1:
         todays_action = game_state.actions[game_state.day]
-        incident_choice = todays_action["incident_choices"][0]
+        incident_choice = todays_action.incident_choices[0] if todays_action.incident_choices else None
+        if incident_choice is None:
+            raise ValueError(f"Murder incident should happen but no incident choice present")
         target = incident_choice.target
         target_character = next((c for c in others if c.name == target), None)
         if target_character is None:

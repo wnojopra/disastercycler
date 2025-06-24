@@ -1,9 +1,11 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, TypeAlias
+from typing import List, Dict, Optional
+from pydantic import BaseModel, Field
 
 
-class RoleType(Enum):
+# === ENUMS ===
+
+class RoleType(str, Enum):
     BRAIN = "brain"
     CONSPIRACY_THEORIST = "conspiracy_theorist"
     CULTIST = "cultist"
@@ -17,15 +19,18 @@ class RoleType(Enum):
     TIME_TRAVELLER = "time_traveller"
     WITCH = "witch"
 
-class Location(Enum):
+
+class Location(str, Enum):
     CITY = "city"
     HOSPITAL = "hospital"
     SCHOOL = "school"
     SHRINE = "shrine"
 
+
 ALL_LOCATIONS = list(Location)
 
-class ActionType(Enum):
+
+class ActionType(str, Enum):
     MOVE_VERTICAL = "move_vertical"
     MOVE_HORIZONTAL = "move_horizontal"
     MOVE_DIAGONAL = "move_diagonal"
@@ -33,8 +38,25 @@ class ActionType(Enum):
     ADD_PARANOIA = "add_paranoia"
     ADD_INTRIGUE = "add_intrigue"
 
-@dataclass
-class Character:
+
+class ActionTargetType(str, Enum):
+    CHARACTER = "character"
+    LOCATION = "location"
+
+
+class ActionSource(str, Enum):
+    MASTERMIND = "mastermind"
+    PROTAGONIST = "protagonist"
+
+
+class IncidentType(str, Enum):
+    MURDER = "murder"
+    SUICIDE = "suicide"
+
+
+# === MODELS ===
+
+class Character(BaseModel):
     name: str
     location: Location
     starting_location: Location
@@ -54,30 +76,40 @@ class Character:
             return NotImplemented
         return self.name == other.name
 
-class IncidentType(Enum):
-    MURDER = "murder"
-    SUICIDE = "suicide"
 
-@dataclass
-class Incident:
+class Incident(BaseModel):
     type: IncidentType
     day: int
     culprit: str
 
-@dataclass
-class Script:
+
+class Script(BaseModel):
     name: str
     days_per_loop: int
     max_loops: int
     plot: str
     subplots: List[str]
-
     characters: List[Character]
     incidents: List[Incident]
 
-@dataclass
-class Action:
-    type: ActionType | IncidentType
-    target: str
 
-AllActionsByDay: TypeAlias = Dict[int, Dict[str, List[Action]]]
+class Action(BaseModel):
+    source: ActionSource
+    type: ActionType
+    target_type: ActionTargetType
+    target: str
+    metadata: Dict = Field(default_factory=dict)
+
+
+class IncidentChoice(BaseModel):
+    type: IncidentType
+    target: str
+    metadata: Dict = Field(default_factory=dict)
+
+
+class TurnData(BaseModel):
+    actions: List[Action]
+    incident_choices: Optional[List[IncidentChoice]] = None
+
+AllActionsByDay = Dict[int, TurnData]
+

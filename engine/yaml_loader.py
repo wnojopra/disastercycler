@@ -1,6 +1,5 @@
 import yaml
-from typing import List
-from .models import Action, ActionType, AllActionsByDay, Character, IncidentType, Location, RoleType, Incident, Script
+from .models import Action, ActionSource, ActionTargetType, ActionType, AllActionsByDay, Character, IncidentChoice, IncidentType, Location, RoleType, Incident, Script, TurnData
 
 def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:
@@ -37,29 +36,56 @@ def load_script_from_yaml(path: str) -> Script:
         incidents=incidents
     )
 
-def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
-    """
-    Load and validate a sequence of actions for each day from a YAML file.
 
-    Returns:
-        A dict with day as the key and value as another dict with keys:
-        'mastermind', 'protagonist', and optionally 'incident_choices'.
-    """
+def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
     with open(file_path, 'r') as f:
         data = yaml.safe_load(f)
 
     actions_by_day: AllActionsByDay = {}
 
-    def parse_actions(role: str, actions_raw: List[dict], day: int) -> List[Action]:
+    def parse_actions(source: ActionSource, actions_raw: list, day: int) -> list[Action]:
         parsed = []
         for i, action_dict in enumerate(actions_raw):
             if "type" not in action_dict or "target" not in action_dict:
-                raise ValueError(f"Missing 'type' or 'target' in {role} action on day {day}, index {i}")
+                raise ValueError(f"Missing 'type' or 'target' in {source} action on day {day}, index {i}")
+
+            target_str = action_dict["target"]
+            # Infer target_type based on name
+            if target_str.lower() in {loc.value for loc in Location}:
+                target_type = ActionTargetType.LOCATION
+            else:
+                target_type = ActionTargetType.CHARACTER
+
+
             try:
                 action_type = ActionType[action_dict["type"]]
-            except KeyError:
-                raise ValueError(f"Invalid action type '{action_dict['type']}' for {role} on day {day}, index {i}")
-            parsed.append(Action(type=action_type, target=action_dict["target"]))
+            except ValueError as e:
+                raise ValueError(f"Invalid enum value in {source} action on day {day}, index {i}: {e}")
+
+            metadata = action_dict.get("metadata", {})
+            parsed.append(Action(
+                source=source,
+                type=action_type,
+                target_type=target_type,
+                target=action_dict["target"],
+                metadata=metadata
+            ))
+        return parsed
+
+    def parse_incident_choices(choices_raw: list, day: int) -> list[IncidentChoice]:
+        parsed = []
+        for i, c in enumerate(choices_raw):
+            if "incident_type" not in c or "target" not in c:
+                raise ValueError(f"Missing 'incident_type' or 'target' in incident_choice on day {day}, index {i}")
+            try:
+                incident_type = IncidentType[c["incident_type"]]
+            except ValueError:
+                raise ValueError(f"Invalid incident_type '{c['incident_type']}' on day {day}, index {i}")
+            parsed.append(IncidentChoice(
+                type=incident_type,
+                target=c["target"],
+                metadata=c.get("metadata", {})
+            ))
         return parsed
 
     for entry in data:
@@ -67,28 +93,23 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
         if day is None:
             raise ValueError("Each entry must include a 'day' field.")
 
-        for role in ["mastermind", "protagonist"]:
-            if role not in entry:
-                raise ValueError(f"Day {day} must include '{role}' actions.")
+        all_actions: list[Action] = []
 
-        actions_for_day = {
-            role: parse_actions(role, entry[role], day)
-            for role in ["mastermind", "protagonist"]
-        }
+        for role_str in ["mastermind", "protagonist"]:
+            if role_str not in entry:
+                raise ValueError(f"Day {day} must include '{role_str}' actions.")
 
-        # Optional: load incident_choices if present
+            role_enum = ActionSource(role_str)
+            all_actions.extend(parse_actions(role_enum, entry[role_str], day))
+
+        incident_choices = None
         if "incident_choices" in entry:
-            choices = entry["incident_choices"]
-            if not isinstance(choices, list):
-                raise ValueError(f"'incident_choices' must be a list on day {day}")
-            for i, c in enumerate(choices):
-                if "incident_type" not in c or "target" not in c:
-                    raise ValueError(f"Invalid incident_choice on day {day}, index {i}: missing 'incident_type' or 'target'")
-            actions_for_day["incident_choices"] = []
-            for choice in choices:
-                actions_for_day["incident_choices"].append(Action(type=IncidentType[choice["incident_type"]], target=choice["target"]))
+            incident_choices = parse_incident_choices(entry["incident_choices"], day)
 
-        actions_by_day[day] = actions_for_day
+        actions_by_day[day] = TurnData(
+            actions=all_actions,
+            incident_choices=incident_choices
+        )
 
     return actions_by_day
 
