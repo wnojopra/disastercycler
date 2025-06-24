@@ -1,7 +1,7 @@
 export type Role = "mastermind" | "protagonist" | "incident_choices";
 
 export interface ActionPayload {
-  type: string;
+  action_type: string;
   target: string;
 }
 

@@ -3,7 +3,7 @@ from typing import List, Dict, Literal
 from engine.state import GameState
 
 class ActionPayload(BaseModel):
-    type: str
+    action_type: str
     target: str
 
 class SubmitActionsRequest(BaseModel):
