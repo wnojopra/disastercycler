@@ -62,3 +62,24 @@
 
     - target: Doctor
       type: ADD_GOODWILL
+
+- day: 4
+  mastermind:
+    - target: Girl Student
+      type: ADD_INTRIGUE
+
+    - target: Office Worker
+      type: ADD_INTRIGUE
+
+    - target: Doctor
+      type: ADD_INTRIGUE
+
+  protagonist:
+    - target: Boy Student
+      type: ADD_GOODWILL
+
+    - target: Office Worker
+      type: ADD_GOODWILL
+
+    - target: Doctor
+      type: ADD_GOODWILL
