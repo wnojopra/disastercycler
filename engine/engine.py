@@ -1,6 +1,6 @@
 from typing import Dict, List
 from .incident_effects import INCIDENT_EFFECTS
-from .models import Action, Character, Location, ActionType, ALL_LOCATIONS
+from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, TurnData
 from .role_effects import ROLE_EFFECTS
 from .state import GameState
 from collections import defaultdict
@@ -61,12 +61,12 @@ def resolve_action(char: Character, action_type: ActionType):
     else:
         raise ValueError(f"Invalid action type {action_type}")
 
-def resolve_actions(game_state: GameState, actions: Dict[str, List[Action]]):
+def resolve_actions(game_state: GameState, turn_data: TurnData):
     # Group actions by target
     char_to_actions: Dict[Character, List[Action]] = defaultdict(list)
     loc_to_actions: Dict[str, List[Action]] = defaultdict(list)
 
-    for action in actions["mastermind"] + actions["protagonist"]:
+    for action in turn_data.actions:
         if action.target in ALL_LOCATIONS:
             loc_to_actions[action.target].append(action)
         else:
