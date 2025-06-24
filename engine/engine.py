@@ -1,8 +1,8 @@
 from typing import Dict, List
-from incident_effects import INCIDENT_EFFECTS
-from models import Action, Character, Location, ActionType, ALL_LOCATIONS
-from role_effects import ROLE_EFFECTS
-from state import GameState
+from .incident_effects import INCIDENT_EFFECTS
+from .models import Action, Character, Location, ActionType, ALL_LOCATIONS
+from .role_effects import ROLE_EFFECTS
+from .state import GameState
 from collections import defaultdict
 
 # Define the layout as a 2x2 grid

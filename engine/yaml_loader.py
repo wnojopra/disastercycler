@@ -1,6 +1,6 @@
 import yaml
 from typing import List
-from models import Action, ActionType, AllActionsByDay, Character, IncidentType, Location, RoleType, Incident, Script
+from .models import Action, ActionType, AllActionsByDay, Character, IncidentType, Location, RoleType, Incident, Script
 
 def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:

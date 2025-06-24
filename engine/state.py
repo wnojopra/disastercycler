@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from models import Character, Incident, AllActionsByDay
+from .models import Character, Incident, AllActionsByDay
 
 
 @dataclass
