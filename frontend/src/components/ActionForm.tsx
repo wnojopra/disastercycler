@@ -8,8 +8,8 @@ export function ActionForm({ onSubmit }: {
   const [protagonist, setProtagonist] = useState<ActionPayload[]>([]);
   const [incidentChoices, setIncidentChoices] = useState<ActionPayload[]>([]);
 
-  const addAction = (role: Role, type: string, target: string) => {
-    const action = { type, target };
+  const addAction = (role: Role, action_type: string, target: string) => {
+    const action = { action_type, target };
     if (role === "mastermind") setMastermind(prev => [...prev, action]);
     else if (role === "protagonist") setProtagonist(prev => [...prev, action]);
     else setIncidentChoices(prev => [...prev, action]);
