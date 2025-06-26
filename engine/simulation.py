@@ -33,6 +33,29 @@ def simulate_day(game_state: GameState):
         print(f"🏁 Game Over — {game_state.game_result.replace('_', ' ').title()}")
     game_state.day += 1
 
+def run_full_simulation(script_path: str, actions_path: str) -> GameState:
+    """
+    Runs a full game simulation and returns the final state.
+    This function is designed to be testable.
+    """
+    game_state = create_starting_game_state(script_path, actions_path)
+
+    while game_state.game_result is None:
+        if game_state.day > game_state.days_per_loop:
+            check_victory(game_state) 
+            if game_state.game_result is None:
+                if game_state.loop_count >= game_state.max_loops:
+                    game_state.game_result = "mastermind_win"
+                else:
+                    reset_for_new_loop(game_state)
+        
+        if game_state.game_result is None:
+            simulate_day(game_state)
+    
+    # After the loop, do one final check on the very last day's state
+    check_victory(game_state)
+    return game_state
+
 def main():
     parser = argparse.ArgumentParser(description="Run Tragedy Looper simulation.")
     parser.add_argument("script_name", help="Name of the script YAML file (without extension)")
@@ -44,22 +67,11 @@ def main():
     script_path = f"scripts/{args.script_name}/script.yaml"
     actions_path = f"scripts/{args.script_name}/{args.actions_file}.yaml"
 
-    game_state = create_starting_game_state(script_path, actions_path)
-    while game_state.game_result is None:
-        if game_state.day > game_state.days_per_loop:
-            # We've finished a loop. Time to check for victory and reset.
-            check_victory(game_state) # Final check at loop end
-            if game_state.game_result is None:
-                if game_state.loop_count >= game_state.max_loops:
-                    # We've run out of loops, mastermind wins.
-                    print("⏰ The protagonists have run out of time!")
-                    game_state.game_result = "mastermind_win"
-                else:
-                    # Reset for the next loop
-                    reset_for_new_loop(game_state)
-        
-        if game_state.game_result is None:
-            simulate_day(game_state)
+    final_state = run_full_simulation(script_path, actions_path)
+    print("\n--- Final Results ---")
+    if final_state.game_result:
+        print(f"🏁 Game Over — {final_state.game_result.replace('_', ' ').title()}")
+    final_state.print_characters()
 
 
 if __name__ == "__main__":

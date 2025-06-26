@@ -2,3 +2,4 @@ pyyaml
 fastapi
 uvicorn
 pydantic
+pytest
