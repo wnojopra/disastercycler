@@ -1,0 +1,31 @@
+name: "Testing Roles"
+days_per_loop: 2
+max_loops: 1
+plot: "N/A"
+subplots: ["N/A"]
+
+characters:
+  - name: Boy Student
+    starting_location: SCHOOL
+    disallowed_locations: []
+    paranoia_limit: 2
+    role: FRIEND
+  
+  - name: Girl Student
+    starting_location: SCHOOL
+    disallowed_locations: []
+    paranoia_limit: 3
+    role: KEY_PERSON
+
+  - name: Shrine Maiden
+    starting_location: SHRINE
+    disallowed_locations: [CITY]
+    paranoia_limit: 2
+    role: SERIAL_KILLER
+
+  - name: Doctor
+    starting_location: HOSPITAL
+    disallowed_locations: []
+    paranoia_limit: 2
+    role: PERSON
+

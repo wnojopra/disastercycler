@@ -1,6 +1,6 @@
 from typing import Dict, List
 from .incident_effects import INCIDENT_EFFECTS
-from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, TurnData
+from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, RoleType, TurnData
 from .role_effects import ROLE_EFFECTS
 from .state import GameState
 from collections import defaultdict
@@ -107,3 +107,26 @@ def resolve_incident(game_state: GameState):
                 effect_fn(culprit, incident, game_state)
         else:
             print(f"🟢 The {incident.type} incident does not happen on day {game_state.day}")
+
+def reset_for_new_loop(game_state: GameState):
+    """Resets the game state for the start of a new loop."""
+    print("--- 🔁 STARTING NEW LOOP ---")
+    game_state.loop_count += 1
+    game_state.day = 1
+    
+    # Reset each character to their starting state
+    for char in game_state.characters:
+        char.location = char.starting_location
+        char.paranoia = 0
+        char.goodwill = 0 # Reset goodwill to 0 first for everyone
+        char.intrigue = 0
+        char.alive = True
+
+    # Now, apply the Friend's special bonus
+    if RoleType.FRIEND in game_state.revealed_roles:
+        try:
+            friend_char = next(c for c in game_state.characters if c.role == RoleType.FRIEND)
+            friend_char.goodwill = 1
+            print(f"✨ The Friend ({friend_char.name}) has been revealed and starts with 1 Goodwill.")
+        except StopIteration:
+            pass # No friend in script

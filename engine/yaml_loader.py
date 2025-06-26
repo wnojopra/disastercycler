@@ -18,13 +18,14 @@ def load_script_from_yaml(path: str) -> Script:
         characters.append(character)
 
     incidents = []
-    for entry in data["incidents"]:
-        incident = Incident(
-            type = IncidentType[entry["type"]],
-            day = entry["day"],
-            culprit = entry["culprit"]
-        )
-        incidents.append(incident)
+    if "incidents" in data:
+        for entry in data["incidents"]:
+            incident = Incident(
+                type = IncidentType[entry["type"]],
+                day = entry["day"],
+                culprit = entry["culprit"]
+            )
+            incidents.append(incident)
 
     return Script(
         name=data["name"],
