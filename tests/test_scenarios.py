@@ -51,3 +51,11 @@ def test_protagonists_win():
     final_state = run_full_simulation(script_path, actions_path)
     assert final_state.game_result == "protagonist_win"
     assert all(char.alive for char in final_state.characters)
+
+def test_conspiracy_theorist_ability():
+    script_path = "scripts/the_first_script/script.yaml"
+    actions_path = "scripts/the_first_script/actions_ct.yaml"
+    final_state = run_full_simulation(script_path, actions_path)
+    assert final_state.game_result == "mastermind_win"
+    key_person = next(c for c in final_state.characters if c.role == RoleType.KEY_PERSON)
+    assert not key_person.alive

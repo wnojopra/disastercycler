@@ -107,9 +107,14 @@ class IncidentChoice(BaseModel):
     metadata: Dict = Field(default_factory=dict)
 
 
+class AbilityChoice(BaseModel):
+    source: RoleType 
+    target: str
+
+
 class TurnData(BaseModel):
     actions: List[Action]
     incident_choices: Optional[List[IncidentChoice]] = None
+    ability_actions: Optional[List[AbilityChoice]] = None
 
 AllActionsByDay = Dict[int, TurnData]
-

@@ -59,6 +59,7 @@ pip install -e .
 
 Once you have activated the virtual environment and installed requirements, you can run the below commands to run the simulation and backend service. 
 
+If you ever need to stop using the virtual environment for any reason, simply run `deactivate`.
 
 ### 🧪 Run the Simulation from CLI
 From the root directory:

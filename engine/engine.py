@@ -1,4 +1,6 @@
 from typing import Dict, List
+
+from engine.ability_effects import ABILITY_LOGIC
 from .incident_effects import INCIDENT_EFFECTS
 from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, RoleType, TurnData
 from .role_effects import ROLE_EFFECTS
@@ -84,6 +86,30 @@ def resolve_actions(game_state: GameState, turn_data: TurnData):
     # for loc, action_list in loc_to_actions.items():
     #     ...
 
+
+def resolve_abilities(game_state: GameState, turn_data: TurnData):
+    """
+    Resolves the ability actions chosen by players for the turn.
+    """
+    if not turn_data.ability_actions:
+        return # Skip if no abilities were used
+
+    print("--- 🎭 Abilities Phase ---")
+
+    for choice in turn_data.ability_actions:
+        source_char = next((c for c in game_state.characters if c.role == choice.source), None)
+        target_char = next((c for c in game_state.characters if c.name == choice.target), None)
+
+        if not source_char or not target_char:
+            print(f"Warning: Invalid character in ability choice, skipping.")
+            continue
+        
+        ability_fn = ABILITY_LOGIC.get(source_char.role)
+        if not ability_fn:
+            print(f"Warning: {source_char.name} ({source_char.role.name}) has no defined ability, skipping.")
+            continue
+
+        ability_fn(source_char, target_char, game_state)
 
 
 def resolve_roles(game_state: GameState):
