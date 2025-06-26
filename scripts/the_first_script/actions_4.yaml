@@ -8,7 +8,7 @@
       type: ADD_INTRIGUE
 
     - target: Doctor
-      type: ADD_INTRIGUE
+      type: MOVE_VERTICAL
 
   protagonist:
     - target: Shrine Maiden
@@ -19,6 +19,10 @@
 
     - target: Doctor
       type: ADD_GOODWILL
+
+  ability_actions:
+    - source: BRAIN
+      target: Office Worker
 
 - day: 2
   mastermind:
@@ -41,6 +45,10 @@
     - target: Doctor
       type: ADD_GOODWILL
 
+  ability_actions:
+    - source: BRAIN
+      target: Office Worker
+
 - day: 3
   mastermind:
     - target: Girl Student
@@ -62,6 +70,10 @@
     - target: Doctor
       type: ADD_GOODWILL
 
+  ability_actions:
+    - source: BRAIN
+      target: Office Worker
+
 - day: 4
   mastermind:
     - target: Girl Student
@@ -82,3 +94,7 @@
 
     - target: Doctor
       type: ADD_GOODWILL
+
+  ability_actions:
+    - source: BRAIN
+      target: Office Worker

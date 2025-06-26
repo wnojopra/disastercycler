@@ -59,3 +59,12 @@ def test_conspiracy_theorist_ability():
     assert final_state.game_result == "mastermind_win"
     key_person = next(c for c in final_state.characters if c.role == RoleType.KEY_PERSON)
     assert not key_person.alive
+
+def test_brain_ability():
+    script_path = "scripts/the_first_script/script.yaml"
+    actions_path = "scripts/the_first_script/actions_4.yaml"
+    final_state = run_full_simulation(script_path, actions_path)
+    assert final_state.game_result == "protagonist_win"
+    assert all(char.alive for char in final_state.characters)
+    office_worker = next(c for c in final_state.characters if c.name == "Office Worker")
+    assert office_worker.intrigue == 8
