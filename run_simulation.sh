@@ -8,3 +8,4 @@ fi
 DAY_NUM="$1"
 
 python -m engine.simulation the_first_script "actions_${DAY_NUM}"
+# python -m engine.simulation testing_roles "actions_${DAY_NUM}"

@@ -1,7 +1,7 @@
-from dataclasses import dataclass
-from typing import List, Optional
+from dataclasses import dataclass, field
+from typing import List, Optional, Set
 
-from .models import Character, Incident, AllActionsByDay
+from .models import Character, Incident, AllActionsByDay, RoleType
 
 
 @dataclass
@@ -14,6 +14,7 @@ class GameState:
     incidents: List[Incident]
     actions: AllActionsByDay
     game_result: Optional[str] = None  # "protagonists_win", "mastermind_win", or None
+    revealed_roles: Set[RoleType] = field(default_factory=set)
 
 
     def print_characters(self):

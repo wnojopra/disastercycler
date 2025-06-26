@@ -2,7 +2,7 @@ import argparse
 from .state import GameState
 from .victory_checker import check_victory
 from .yaml_loader import load_actions_from_yaml, load_script_from_yaml
-from .engine import resolve_actions, resolve_roles, resolve_incident
+from .engine import reset_for_new_loop, resolve_actions, resolve_roles, resolve_incident
 
 def create_starting_game_state(script_path: str, actions_path: str) -> GameState:
     day = 1
@@ -46,7 +46,20 @@ def main():
 
     game_state = create_starting_game_state(script_path, actions_path)
     while game_state.game_result is None:
-        simulate_day(game_state)
+        if game_state.day > game_state.days_per_loop:
+            # We've finished a loop. Time to check for victory and reset.
+            check_victory(game_state) # Final check at loop end
+            if game_state.game_result is None:
+                if game_state.loop_count >= game_state.max_loops:
+                    # We've run out of loops, mastermind wins.
+                    print("⏰ The protagonists have run out of time!")
+                    game_state.game_result = "mastermind_win"
+                else:
+                    # Reset for the next loop
+                    reset_for_new_loop(game_state)
+        
+        if game_state.game_result is None:
+            simulate_day(game_state)
 
 
 if __name__ == "__main__":
