@@ -1,10 +1,12 @@
-# The expected outcome here is the murder incident triggers on day 2
+# ct: conspiracy theorist
+# The expected outcome here is the murder incident triggers on day 2 due to
+# conspiracy theorist abilities
 - day: 1
   mastermind:
     - target: Girl Student
       type: ADD_PARANOIA
 
-    - target: Office Worker
+    - target: Boy Student
       type: ADD_PARANOIA
 
     - target: Doctor
@@ -20,12 +22,17 @@
     - target: Doctor
       type: ADD_GOODWILL
 
+  ability_actions:
+    - source: CONSPIRACY_THEORIST
+      target: Office Worker
+
+
 - day: 2
   mastermind:
     - target: Girl Student
       type: MOVE_HORIZONTAL
 
-    - target: Office Worker
+    - target: Boy Student
       type: ADD_PARANOIA
 
     - target: Doctor
@@ -40,6 +47,10 @@
 
     - target: Doctor
       type: ADD_GOODWILL
+
+  ability_actions:
+    - source: CONSPIRACY_THEORIST
+      target: Office Worker
 
   incident_choices:
     - incident_type: MURDER

@@ -2,7 +2,7 @@ import argparse
 from .state import GameState
 from .victory_checker import check_victory
 from .yaml_loader import load_actions_from_yaml, load_script_from_yaml
-from .engine import reset_for_new_loop, resolve_actions, resolve_roles, resolve_incident
+from .engine import reset_for_new_loop, resolve_abilities, resolve_actions, resolve_roles, resolve_incident
 
 def create_starting_game_state(script_path: str, actions_path: str) -> GameState:
     day = 1
@@ -22,6 +22,7 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
 def simulate_day(game_state: GameState):
     todays_actions = game_state.actions[game_state.day]
     resolve_actions(game_state, todays_actions)
+    resolve_abilities(game_state, todays_actions)
     resolve_roles(game_state)
     resolve_incident(game_state)
 

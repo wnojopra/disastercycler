@@ -1,5 +1,9 @@
 import yaml
-from .models import Action, ActionSource, ActionTargetType, ActionType, AllActionsByDay, Character, IncidentChoice, IncidentType, Location, RoleType, Incident, Script, TurnData
+from .models import (
+    AbilityChoice, Action, ActionSource, ActionTargetType, ActionType,
+    AllActionsByDay, Character, IncidentChoice, IncidentType, Location,
+    RoleType, Incident, Script, TurnData
+)
 
 def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:
@@ -88,6 +92,18 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
                 metadata=c.get("metadata", {})
             ))
         return parsed
+    
+    def parse_ability_choices(choices_raw: list, day: int) -> list[AbilityChoice]:
+        parsed = []
+        for i, choice in enumerate(choices_raw):
+            if "source" not in choice or "target" not in choice:
+                raise ValueError(f"Missing required key in ability_actions on day {day}, index {i}")
+
+            parsed.append(AbilityChoice(
+                source=RoleType[choice["source"]],
+                target=choice["target"]
+            ))
+        return parsed
 
     for entry in data:
         day = entry.get("day")
@@ -107,9 +123,15 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
         if "incident_choices" in entry:
             incident_choices = parse_incident_choices(entry["incident_choices"], day)
 
+        ability_actions = None
+        if "ability_actions" in entry:
+            ability_actions = parse_ability_choices(entry["ability_actions"], day)
+
+
         actions_by_day[day] = TurnData(
             actions=all_actions,
-            incident_choices=incident_choices
+            incident_choices=incident_choices,
+            ability_actions=ability_actions
         )
 
     return actions_by_day
