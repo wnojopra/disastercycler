@@ -43,9 +43,20 @@ disastercycler/
 
 ### 📦 Install dependencies
 
+In order to not overwrite the installed packages of your system Python, we suggest creating a python virtual environment for dependencies.
+
 ```bash
+# This creates a directory named venv/
+python3 -m venv venv
+
+# This modifies your shell's `PATH` to use Python and pip from `venv/`
+source venv/bin/activate
+
+# This installs the project dependcies into venv Python
 pip install -r requirements.txt
 ```
+
+Once you have activated the virtual environment and installed requirements, you can run the below commands to run the simulation and backend service. 
 
 
 ### 🧪 Run the Simulation from CLI

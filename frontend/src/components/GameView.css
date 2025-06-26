@@ -1,0 +1,35 @@
+.game-view-container {
+  font-family: sans-serif;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #eee;
+}
+
+.location-box {
+  border: 1px solid #aaa;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  min-height: 200px;
+}
+
+.location-box h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #444;
+}
+
+.character-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}

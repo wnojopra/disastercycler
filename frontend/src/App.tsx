@@ -25,7 +25,7 @@ function App() {
     <div>
       <h1>🌀 Disaster Cycler</h1>
       {state && <GameView state={state} />}
-      <ActionForm onSubmit={handleSubmit} />
+      {state && <ActionForm onSubmit={handleSubmit} characters={state.characters} />}
     </div>
   );
 }
