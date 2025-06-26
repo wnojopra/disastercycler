@@ -1,0 +1,51 @@
+# .github/workflows/python-tests.yml
+
+# A descriptive name for your workflow
+name: Run Python Tests
+
+# This section defines when the workflow will run
+on:
+  # Run on pushes to the main branch
+  push:
+    branches: [ main ]
+  # Run on pull requests that target the main branch
+  pull_request:
+    branches: [ main ]
+
+# This section defines the actual work to be done
+jobs:
+  # We define a single job called "build"
+  build:
+    # Use the latest version of Ubuntu as the operating system for our runner
+    runs-on: ubuntu-latest
+    
+    # This strategy will run the job against multiple Python versions
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    # These are the sequential steps the job will perform
+    steps:
+      # Step 1: Check out your repository code so the workflow can access it
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the specific version of Python from our matrix
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Step 3: Install dependencies
+      # This step should mirror your local setup instructions
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+      
+      # Step 4: Run pytest
+      # We use "python -m pytest" to ensure pathing is handled correctly
+      - name: Run tests with pytest
+        run: |
+          python -m pytest

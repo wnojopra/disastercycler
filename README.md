@@ -54,6 +54,7 @@ source venv/bin/activate
 
 # This installs the project dependcies into venv Python
 pip install -r requirements.txt
+pip install -e .
 ```
 
 Once you have activated the virtual environment and installed requirements, you can run the below commands to run the simulation and backend service. 
@@ -80,6 +81,11 @@ Example output:
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 Then open: http://localhost:8000/docs for interactive Swagger API.
+
+### 🔍 Run tests
+```bash
+pytest
+```
 
 
 ## ✅ Features
