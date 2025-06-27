@@ -2,18 +2,18 @@ from typing import Dict, List
 
 from engine.ability_effects import ABILITY_LOGIC
 from .incident_effects import INCIDENT_EFFECTS
-from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, RoleType, TurnData
+from .models import Action, Character, Location, ActionType, ALL_LOCATIONS, LocationType, RoleType, TurnData
 from .role_effects import ROLE_EFFECTS
 from .state import GameState
 from collections import defaultdict
 
 # Define the layout as a 2x2 grid
 LOCATION_GRID = [
-    [Location.HOSPITAL, Location.SHRINE],   # Top row
-    [Location.CITY, Location.SCHOOL]        # Bottom row
+    [LocationType.HOSPITAL, LocationType.SHRINE],   # Top row
+    [LocationType.CITY, LocationType.SCHOOL]        # Bottom row
 ]
 
-def find_location_coords(location: Location) -> tuple[int, int]:
+def find_location_coords(location: LocationType) -> tuple[int, int]:
     for row_idx, row in enumerate(LOCATION_GRID):
         for col_idx, loc in enumerate(row):
             if loc == location:
@@ -80,7 +80,7 @@ def resolve_actions(game_state: GameState, turn_data: TurnData):
     # Resolve actions targeting characters
     for char, action_list in char_to_actions.items():
         for action in action_list:
-            resolve_action(char, action.type) # type: ignore
+            resolve_action(char, action.type)
 
     # TODO: Resolve location-based actions (not yet implemented)
     # for loc, action_list in loc_to_actions.items():
@@ -98,10 +98,14 @@ def resolve_abilities(game_state: GameState, turn_data: TurnData):
 
     for choice in turn_data.ability_actions:
         source_char = next((c for c in game_state.characters if c.role == choice.source), None)
-        target_char = next((c for c in game_state.characters if c.name == choice.target), None)
+        if choice.target.lower() in LocationType:
+            target_loc_enum = LocationType(choice.target.lower())
+            target_obj = game_state.location_states[target_loc_enum]
+        else:
+            target_obj = next((c for c in game_state.characters if c.name == choice.target), None)
 
-        if not source_char or not target_char:
-            print(f"Warning: Invalid character in ability choice, skipping.")
+        if not source_char or not target_obj:
+            print(f"Warning: Invalid character or location in ability choice, skipping.")
             continue
         
         ability_fn = ABILITY_LOGIC.get(source_char.role)
@@ -109,7 +113,7 @@ def resolve_abilities(game_state: GameState, turn_data: TurnData):
             print(f"Warning: {source_char.name} ({source_char.role.name}) has no defined ability, skipping.")
             continue
 
-        ability_fn(source_char, target_char, game_state)
+        ability_fn(source_char, target_obj)
 
 
 def resolve_roles(game_state: GameState):

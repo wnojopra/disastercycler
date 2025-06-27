@@ -36,7 +36,7 @@ class GameStateResponse(BaseModel):
             characters=[
                 CharacterState(
                     name=c.name,
-                    location=c.location.name,
+                    location=c.location.location_type,
                     paranoia=c.paranoia,
                     goodwill=c.goodwill,
                     intrigue=c.intrigue,

@@ -20,14 +20,14 @@ class RoleType(str, Enum):
     WITCH = "witch"
 
 
-class Location(str, Enum):
+class LocationType(str, Enum):
     CITY = "city"
     HOSPITAL = "hospital"
     SCHOOL = "school"
     SHRINE = "shrine"
 
 
-ALL_LOCATIONS = list(Location)
+ALL_LOCATIONS = list(LocationType)
 
 
 class ActionType(str, Enum):
@@ -58,9 +58,9 @@ class IncidentType(str, Enum):
 
 class Character(BaseModel):
     name: str
-    location: Location
-    starting_location: Location
-    disallowed_locations: List[Location]
+    location: LocationType
+    starting_location: LocationType
+    disallowed_locations: List[LocationType]
     paranoia: int = 0
     paranoia_limit: int = 0
     goodwill: int = 0
@@ -75,6 +75,11 @@ class Character(BaseModel):
         if not isinstance(other, Character):
             return NotImplemented
         return self.name == other.name
+
+
+class Location(BaseModel):
+    location_type: LocationType
+    intrigue: int = 0
 
 
 class Incident(BaseModel):

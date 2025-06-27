@@ -97,4 +97,4 @@
 
   ability_actions:
     - source: BRAIN
-      target: Office Worker
+      target: CITY

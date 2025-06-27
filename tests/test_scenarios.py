@@ -1,5 +1,5 @@
 from engine.simulation import run_full_simulation
-from engine.models import RoleType
+from engine.models import LocationType, RoleType
 
 def test_friend_dies_at_end_of_loop():
     """
@@ -67,4 +67,5 @@ def test_brain_ability():
     assert final_state.game_result == "protagonist_win"
     assert all(char.alive for char in final_state.characters)
     office_worker = next(c for c in final_state.characters if c.name == "Office Worker")
-    assert office_worker.intrigue == 8
+    assert office_worker.intrigue == 7
+    assert final_state.location_states[LocationType.CITY].intrigue == 1
