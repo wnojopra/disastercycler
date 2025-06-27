@@ -8,7 +8,7 @@ from engine.models import (
     ActionType,
     IncidentChoice,
     IncidentType,
-    Location,
+    LocationType,
     TurnData,
 )
 from engine.simulation import simulate_day
@@ -21,7 +21,7 @@ SCRIPT_PATH = "scripts/the_first_script/script.yaml"
 def to_engine_action(source: ActionSource, payload: ActionPayload) -> Action:
     action_type = ActionType[payload.action_type]
 
-    if payload.target.lower() in {loc.value for loc in Location}:
+    if payload.target.lower() in {loc.value for loc in LocationType}:
         target_type = ActionTargetType.LOCATION
     else:
         target_type = ActionTargetType.CHARACTER

@@ -18,10 +18,6 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
     day = 1
     script = load_script_from_yaml(script_path)
     actions = load_actions_from_yaml(actions_path)
-    location_states = {
-        location_type: Location(location_type=location_type)
-        for location_type in LocationType
-    }
 
     return GameState(
         day=day,
@@ -31,7 +27,6 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
         characters=script.characters,
         incidents=script.incidents,
         actions=actions,
-        location_states=location_states,
     )
 
 

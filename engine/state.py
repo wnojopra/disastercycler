@@ -20,7 +20,12 @@ class GameState:
     characters: List[Character]
     incidents: List[Incident]
     actions: AllActionsByDay
-    location_states: Dict[LocationType, Location]
+    location_states: Dict[LocationType, Location] = field(
+        default_factory=lambda: {
+            location_type: Location(location_type=location_type)
+            for location_type in LocationType
+        }
+    )
     game_result: Optional[str] = None  # "protagonists_win", "mastermind_win", or None
     revealed_roles: Set[RoleType] = field(default_factory=set)
 
