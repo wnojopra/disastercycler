@@ -98,7 +98,7 @@ def resolve_abilities(game_state: GameState, turn_data: TurnData):
 
     for choice in turn_data.ability_actions:
         source_char = next((c for c in game_state.characters if c.role == choice.source), None)
-        if choice.target.lower() in LocationType:
+        if choice.target.lower() in {l.value for l in LocationType}:
             target_loc_enum = LocationType(choice.target.lower())
             target_obj = game_state.location_states[target_loc_enum]
         else:
