@@ -1,14 +1,21 @@
+from typing import Dict, List, Literal
+
 from pydantic import BaseModel
-from typing import List, Dict, Literal
+
 from engine.state import GameState
+
 
 class ActionPayload(BaseModel):
     action_type: str
     target: str
 
+
 class SubmitActionsRequest(BaseModel):
     game_id: str
-    actions: Dict[Literal["mastermind", "protagonist", "incident_choices"], List[ActionPayload]]
+    actions: Dict[
+        Literal["mastermind", "protagonist", "incident_choices"], List[ActionPayload]
+    ]
+
 
 class CharacterState(BaseModel):
     name: str
@@ -18,6 +25,7 @@ class CharacterState(BaseModel):
     intrigue: int
     alive: bool
     role: str
+
 
 class GameStateResponse(BaseModel):
     game_id: str
@@ -41,8 +49,8 @@ class GameStateResponse(BaseModel):
                     goodwill=c.goodwill,
                     intrigue=c.intrigue,
                     alive=c.alive,
-                    role=c.role.name
+                    role=c.role.name,
                 )
                 for c in game_state.characters
-            ]
+            ],
         )
