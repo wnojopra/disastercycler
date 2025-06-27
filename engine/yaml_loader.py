@@ -1,7 +1,7 @@
 import yaml
 from .models import (
     AbilityChoice, Action, ActionSource, ActionTargetType, ActionType,
-    AllActionsByDay, Character, IncidentChoice, IncidentType, Location,
+    AllActionsByDay, Character, IncidentChoice, IncidentType, Location, LocationType,
     RoleType, Incident, Script, TurnData
 )
 
@@ -13,9 +13,9 @@ def load_script_from_yaml(path: str) -> Script:
     for entry in data["characters"]:
         character = Character(
             name=entry["name"],
-            location=Location[entry["starting_location"]],
-            starting_location=Location[entry["starting_location"]],
-            disallowed_locations=[Location[loc] for loc in entry["disallowed_locations"]],
+            location=LocationType[entry["starting_location"]],
+            starting_location=LocationType[entry["starting_location"]],
+            disallowed_locations=[LocationType[loc] for loc in entry["disallowed_locations"]],
             paranoia_limit=entry["paranoia_limit"],
             role=RoleType[entry["role"]]
         )
@@ -56,7 +56,7 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
 
             target_str = action_dict["target"]
             # Infer target_type based on name
-            if target_str.lower() in {loc.value for loc in Location}:
+            if target_str.lower() in {loc.value for loc in LocationType}:
                 target_type = ActionTargetType.LOCATION
             else:
                 target_type = ActionTargetType.CHARACTER

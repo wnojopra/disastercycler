@@ -1,4 +1,6 @@
 import argparse
+
+from engine.models import Location, LocationType
 from .state import GameState
 from .victory_checker import check_victory
 from .yaml_loader import load_actions_from_yaml, load_script_from_yaml
@@ -8,6 +10,9 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
     day = 1
     script = load_script_from_yaml(script_path)
     actions = load_actions_from_yaml(actions_path)
+    location_states = {
+        location_type: Location(location_type=location_type) for location_type in LocationType
+    }
     
     return GameState(
         day=day,
@@ -16,7 +21,8 @@ def create_starting_game_state(script_path: str, actions_path: str) -> GameState
         max_loops=script.max_loops,
         characters=script.characters,
         incidents=script.incidents,
-        actions=actions
+        actions=actions,
+        location_states=location_states
     )
 
 def simulate_day(game_state: GameState):
