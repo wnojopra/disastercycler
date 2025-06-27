@@ -1,5 +1,6 @@
-from .state import GameState
 from .models import RoleType
+from .state import GameState
+
 
 def check_friend_loss_condition(game_state: GameState):
     """
@@ -11,8 +12,10 @@ def check_friend_loss_condition(game_state: GameState):
         return
 
     try:
-        friend_char = next(c for c in game_state.characters if c.role == RoleType.FRIEND)
-        
+        friend_char = next(
+            c for c in game_state.characters if c.role == RoleType.FRIEND
+        )
+
         if not friend_char.alive:
             print(f"💔 The Friend ({friend_char.name}) is dead at the end of the loop!")
             game_state.game_result = "mastermind_win"
@@ -21,6 +24,7 @@ def check_friend_loss_condition(game_state: GameState):
     except StopIteration:
         # No Friend character in this script, so we do nothing.
         return
+
 
 def check_victory(game_state: GameState):
     """
@@ -40,6 +44,8 @@ def check_victory(game_state: GameState):
     check_friend_loss_condition(game_state)
 
     if game_state.game_result is None and (game_state.day == game_state.days_per_loop):
-        print(f"🏆 The end of the last day has ended with no tragedies. Protagonists win!")
+        print(
+            f"🏆 The end of the last day has ended with no tragedies. Protagonists win!"
+        )
         game_state.game_result = "protagonist_win"
         return

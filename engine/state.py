@@ -1,7 +1,14 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
-from .models import Character, Incident, AllActionsByDay, Location, LocationType, RoleType
+from .models import (
+    AllActionsByDay,
+    Character,
+    Incident,
+    Location,
+    LocationType,
+    RoleType,
+)
 
 
 @dataclass
@@ -16,7 +23,6 @@ class GameState:
     location_states: Dict[LocationType, Location]
     game_result: Optional[str] = None  # "protagonists_win", "mastermind_win", or None
     revealed_roles: Set[RoleType] = field(default_factory=set)
-
 
     def print_characters(self):
         for char in self.characters:

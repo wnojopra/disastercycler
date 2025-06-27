@@ -1,9 +1,23 @@
 import yaml
+
 from .models import (
-    AbilityChoice, Action, ActionSource, ActionTargetType, ActionType,
-    AllActionsByDay, Character, IncidentChoice, IncidentType, Location, LocationType,
-    RoleType, Incident, Script, TurnData
+    AbilityChoice,
+    Action,
+    ActionSource,
+    ActionTargetType,
+    ActionType,
+    AllActionsByDay,
+    Character,
+    Incident,
+    IncidentChoice,
+    IncidentType,
+    Location,
+    LocationType,
+    RoleType,
+    Script,
+    TurnData,
 )
+
 
 def load_script_from_yaml(path: str) -> Script:
     with open(path, "r") as f:
@@ -15,9 +29,11 @@ def load_script_from_yaml(path: str) -> Script:
             name=entry["name"],
             location=LocationType[entry["starting_location"]],
             starting_location=LocationType[entry["starting_location"]],
-            disallowed_locations=[LocationType[loc] for loc in entry["disallowed_locations"]],
+            disallowed_locations=[
+                LocationType[loc] for loc in entry["disallowed_locations"]
+            ],
             paranoia_limit=entry["paranoia_limit"],
-            role=RoleType[entry["role"]]
+            role=RoleType[entry["role"]],
         )
         characters.append(character)
 
@@ -25,9 +41,9 @@ def load_script_from_yaml(path: str) -> Script:
     if "incidents" in data:
         for entry in data["incidents"]:
             incident = Incident(
-                type = IncidentType[entry["type"]],
-                day = entry["day"],
-                culprit = entry["culprit"]
+                type=IncidentType[entry["type"]],
+                day=entry["day"],
+                culprit=entry["culprit"],
             )
             incidents.append(incident)
 
@@ -38,21 +54,25 @@ def load_script_from_yaml(path: str) -> Script:
         plot=data["plot"],
         subplots=data["subplots"],
         characters=characters,
-        incidents=incidents
+        incidents=incidents,
     )
 
 
 def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         data = yaml.safe_load(f)
 
     actions_by_day: AllActionsByDay = {}
 
-    def parse_actions(source: ActionSource, actions_raw: list, day: int) -> list[Action]:
+    def parse_actions(
+        source: ActionSource, actions_raw: list, day: int
+    ) -> list[Action]:
         parsed = []
         for i, action_dict in enumerate(actions_raw):
             if "type" not in action_dict or "target" not in action_dict:
-                raise ValueError(f"Missing 'type' or 'target' in {source} action on day {day}, index {i}")
+                raise ValueError(
+                    f"Missing 'type' or 'target' in {source} action on day {day}, index {i}"
+                )
 
             target_str = action_dict["target"]
             # Infer target_type based on name
@@ -61,48 +81,60 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
             else:
                 target_type = ActionTargetType.CHARACTER
 
-
             try:
                 action_type = ActionType[action_dict["type"]]
             except ValueError as e:
-                raise ValueError(f"Invalid enum value in {source} action on day {day}, index {i}: {e}")
+                raise ValueError(
+                    f"Invalid enum value in {source} action on day {day}, index {i}: {e}"
+                )
 
             metadata = action_dict.get("metadata", {})
-            parsed.append(Action(
-                source=source,
-                type=action_type,
-                target_type=target_type,
-                target=action_dict["target"],
-                metadata=metadata
-            ))
+            parsed.append(
+                Action(
+                    source=source,
+                    type=action_type,
+                    target_type=target_type,
+                    target=action_dict["target"],
+                    metadata=metadata,
+                )
+            )
         return parsed
 
     def parse_incident_choices(choices_raw: list, day: int) -> list[IncidentChoice]:
         parsed = []
         for i, c in enumerate(choices_raw):
             if "incident_type" not in c or "target" not in c:
-                raise ValueError(f"Missing 'incident_type' or 'target' in incident_choice on day {day}, index {i}")
+                raise ValueError(
+                    f"Missing 'incident_type' or 'target' in incident_choice on day {day}, index {i}"
+                )
             try:
                 incident_type = IncidentType[c["incident_type"]]
             except ValueError:
-                raise ValueError(f"Invalid incident_type '{c['incident_type']}' on day {day}, index {i}")
-            parsed.append(IncidentChoice(
-                type=incident_type,
-                target=c["target"],
-                metadata=c.get("metadata", {})
-            ))
+                raise ValueError(
+                    f"Invalid incident_type '{c['incident_type']}' on day {day}, index {i}"
+                )
+            parsed.append(
+                IncidentChoice(
+                    type=incident_type,
+                    target=c["target"],
+                    metadata=c.get("metadata", {}),
+                )
+            )
         return parsed
-    
+
     def parse_ability_choices(choices_raw: list, day: int) -> list[AbilityChoice]:
         parsed = []
         for i, choice in enumerate(choices_raw):
             if "source" not in choice or "target" not in choice:
-                raise ValueError(f"Missing required key in ability_actions on day {day}, index {i}")
+                raise ValueError(
+                    f"Missing required key in ability_actions on day {day}, index {i}"
+                )
 
-            parsed.append(AbilityChoice(
-                source=RoleType[choice["source"]],
-                target=choice["target"]
-            ))
+            parsed.append(
+                AbilityChoice(
+                    source=RoleType[choice["source"]], target=choice["target"]
+                )
+            )
         return parsed
 
     for entry in data:
@@ -127,12 +159,10 @@ def load_actions_from_yaml(file_path: str) -> AllActionsByDay:
         if "ability_actions" in entry:
             ability_actions = parse_ability_choices(entry["ability_actions"], day)
 
-
         actions_by_day[day] = TurnData(
             actions=all_actions,
             incident_choices=incident_choices,
-            ability_actions=ability_actions
+            ability_actions=ability_actions,
         )
 
     return actions_by_day
-

@@ -1,9 +1,10 @@
 from enum import Enum
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-
 # === ENUMS ===
+
 
 class RoleType(str, Enum):
     BRAIN = "brain"
@@ -55,6 +56,7 @@ class IncidentType(str, Enum):
 
 
 # === MODELS ===
+
 
 class Character(BaseModel):
     name: str
@@ -113,7 +115,7 @@ class IncidentChoice(BaseModel):
 
 
 class AbilityChoice(BaseModel):
-    source: RoleType 
+    source: RoleType
     target: str
 
 
@@ -121,5 +123,6 @@ class TurnData(BaseModel):
     actions: List[Action]
     incident_choices: Optional[List[IncidentChoice]] = None
     ability_actions: Optional[List[AbilityChoice]] = None
+
 
 AllActionsByDay = Dict[int, TurnData]

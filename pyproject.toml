@@ -8,6 +8,8 @@ build-backend = "setuptools.build_meta"
 name = "disastercycler_engine"
 version = "0.1.0"
 
-# --- ADD THIS SECTION ---
 [tool.setuptools]
 packages = ["engine", "app"]
+
+[tool.isort]
+profile = "black"
