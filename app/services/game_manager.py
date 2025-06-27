@@ -1,11 +1,22 @@
 import uuid
-from engine.yaml_loader import load_script_from_yaml
+
+from app.models.api_models import ActionPayload, GameStateResponse
+from engine.models import (
+    Action,
+    ActionSource,
+    ActionTargetType,
+    ActionType,
+    IncidentChoice,
+    IncidentType,
+    Location,
+    TurnData,
+)
 from engine.simulation import simulate_day
 from engine.state import GameState
-from engine.models import Action, ActionSource, ActionTargetType, ActionType, IncidentChoice, IncidentType, Location, TurnData
-from app.models.api_models import GameStateResponse, ActionPayload
+from engine.yaml_loader import load_script_from_yaml
 
 SCRIPT_PATH = "scripts/the_first_script/script.yaml"
+
 
 def to_engine_action(source: ActionSource, payload: ActionPayload) -> Action:
     action_type = ActionType[payload.action_type]
@@ -16,11 +27,9 @@ def to_engine_action(source: ActionSource, payload: ActionPayload) -> Action:
         target_type = ActionTargetType.CHARACTER
 
     return Action(
-        source=source,
-        type=action_type,
-        target_type=target_type,
-        target=payload.target
+        source=source, type=action_type, target_type=target_type, target=payload.target
     )
+
 
 class GameManager:
     def __init__(self):
@@ -56,14 +65,14 @@ class GameManager:
 
         incident_choices = []
         for ic_payload in actions.get("incident_choices", []):
-            incident_choices.append(IncidentChoice(
-                type=IncidentType(ic_payload["type"]),
-                target=ic_payload["target"]
-            ))
+            incident_choices.append(
+                IncidentChoice(
+                    type=IncidentType(ic_payload["type"]), target=ic_payload["target"]
+                )
+            )
 
         game_state.actions[day] = TurnData(
-            actions=all_actions,
-            incident_choices=incident_choices or None
+            actions=all_actions, incident_choices=incident_choices or None
         )
 
         simulate_day(game_state)
